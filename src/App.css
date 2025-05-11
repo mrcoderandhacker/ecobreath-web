@@ -109,3 +109,19 @@ button {
 }
 
 
+.mode-btn {
+  margin: 10px 0;
+  padding: 8px 12px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.mode-btn:hover {
+  background-color: #45a049;
+}
+
+
+

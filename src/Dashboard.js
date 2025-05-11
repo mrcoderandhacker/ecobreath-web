@@ -4,45 +4,95 @@ import { database } from './firebase';
 import { ref, set, onValue } from 'firebase/database';
 import './App.css';
 
-
-
 function Dashboard() {
   const [moisture, setMoisture] = useState('Loading...');
   const [fanState, setFanState] = useState('OFF');
   const [lightState, setLightState] = useState('OFF');
 
-  // Fetch real-time updates from Firebase
+  const [fanMode, setFanMode] = useState('MANUAL');
+  const [lightMode, setLightMode] = useState('MANUAL');
+
+  // Auto mode interval references
+  const [fanIntervalId, setFanIntervalId] = useState(null);
+  const [lightIntervalId, setLightIntervalId] = useState(null);
+
   useEffect(() => {
     const moistureRef = ref(database, 'ecoBreath/moisture');
     const fanRef = ref(database, 'ecoBreath/fan');
     const lightRef = ref(database, 'ecoBreath/light');
 
-    // Real-time listener for moisture
     onValue(moistureRef, (snapshot) => {
       const data = snapshot.val();
       if (data !== null) setMoisture(data);
     });
 
-    // Fan listener
     onValue(fanRef, (snapshot) => {
       const state = snapshot.val();
       if (state) setFanState(state);
     });
 
-    // Light listener
     onValue(lightRef, (snapshot) => {
       const state = snapshot.val();
       if (state) setLightState(state);
     });
   }, []);
 
-  // Function to update device state in Firebase
   const toggleDevice = (device, state) => {
     const refPath = ref(database, `ecoBreath/${device}`);
     set(refPath, state)
       .then(() => console.log(`${device} set to ${state}`))
       .catch((error) => console.error(`Error setting ${device}:`, error));
   };
+
+  // Toggle auto/manual for fan
+ const handleFanModeChange = () => {
+  const newMode = fanMode === 'MANUAL' ? 'AUTO' : 'MANUAL';
+  setFanMode(newMode);
+
+  // ✅ Add this to update in Firebase
+  set(ref(database, 'ecoBreath/fanMode'), newMode)
+    .then(() => console.log('fanMode updated to', newMode))
+    .catch((err) => console.error('Error updating fanMode:', err));
+
+  if (newMode === 'AUTO') {
+    const intervalId = setInterval(() => {
+      setFanState(prev => {
+        const newState = prev === 'ON' ? 'OFF' : 'ON';
+        toggleDevice('fan', newState);
+        return newState;
+      });
+    }, 10000);
+    setFanIntervalId(intervalId);
+  } else {
+    clearInterval(fanIntervalId);
+    setFanIntervalId(null);
+  }
+};
+
+
+const handleLightModeChange = () => {
+  const newMode = lightMode === 'MANUAL' ? 'AUTO' : 'MANUAL';
+  setLightMode(newMode);
+
+  // ✅ Add this to update in Firebase
+  set(ref(database, 'ecoBreath/lightMode'), newMode)
+    .then(() => console.log('lightMode updated to', newMode))
+    .catch((err) => console.error('Error updating lightMode:', err));
+
+  if (newMode === 'AUTO') {
+    const intervalId = setInterval(() => {
+      setLightState(prev => {
+        const newState = prev === 'ON' ? 'OFF' : 'ON';
+        toggleDevice('light', newState);
+        return newState;
+      });
+    }, 10000);
+    setLightIntervalId(intervalId);
+  } else {
+    clearInterval(lightIntervalId);
+    setLightIntervalId(null);
+  }
+};
 
   return (
     <div className="dashboard">
@@ -56,16 +106,30 @@ function Dashboard() {
       <div className="controls">
         <div className="control-block">
           <h3>Fan Control</h3>
-          <button onClick={() => toggleDevice('fan', 'ON')}>ON</button>
-          <button onClick={() => toggleDevice('fan', 'OFF')}>OFF</button>
-          <p>Current State: {fanState}</p>
+          <button className="mode-btn" onClick={handleFanModeChange}>
+            Switch to {fanMode === 'MANUAL' ? 'AUTO' : 'MANUAL'} Mode
+          </button>
+          {fanMode === 'MANUAL' && (
+            <>
+              <button onClick={() => toggleDevice('fan', 'ON')}>ON</button>
+              <button onClick={() => toggleDevice('fan', 'OFF')}>OFF</button>
+            </>
+          )}
+          <p>Current State: {fanState} ({fanMode} Mode)</p>
         </div>
 
         <div className="control-block">
           <h3>Light Control</h3>
-          <button onClick={() => toggleDevice('light', 'ON')}>ON</button>
-          <button onClick={() => toggleDevice('light', 'OFF')}>OFF</button>
-          <p>Current State: {lightState}</p>
+          <button className="mode-btn" onClick={handleLightModeChange}>
+            Switch to {lightMode === 'MANUAL' ? 'AUTO' : 'MANUAL'} Mode
+          </button>
+          {lightMode === 'MANUAL' && (
+            <>
+              <button onClick={() => toggleDevice('light', 'ON')}>ON</button>
+              <button onClick={() => toggleDevice('light', 'OFF')}>OFF</button>
+            </>
+          )}
+          <p>Current State: {lightState} ({lightMode} Mode)</p>
         </div>
       </div>
     </div>
