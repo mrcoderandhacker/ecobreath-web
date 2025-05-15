@@ -8,11 +8,14 @@ function Dashboard() {
   const [moisture, setMoisture] = useState('Loading...');
   const [fanState, setFanState] = useState('OFF');
   const [lightState, setLightState] = useState('OFF');
-
   const [fanMode, setFanMode] = useState('MANUAL');
   const [lightMode, setLightMode] = useState('MANUAL');
 
-  // Auto mode interval references
+  const [lightSensorRaw, setLightSensorRaw] = useState('Loading...');
+  const [temperatureRaw, setTemperatureRaw] = useState('Loading...');
+  const [humidityRaw, setHumidityRaw] = useState('Loading...');
+  const [waterLevel, setWaterLevel] = useState('Loading...');
+
   const [fanIntervalId, setFanIntervalId] = useState(null);
   const [lightIntervalId, setLightIntervalId] = useState(null);
 
@@ -20,6 +23,10 @@ function Dashboard() {
     const moistureRef = ref(database, 'ecoBreath/moisture');
     const fanRef = ref(database, 'ecoBreath/fan');
     const lightRef = ref(database, 'ecoBreath/light');
+    const tempRef = ref(database, 'ecoBreath/temperatureRaw');
+    const lightIntensityRef = ref(database, 'ecoBreath/lightSensorRaw');
+    const humidityRef = ref(database, 'ecoBreath/humidityRaw');
+    const waterRef = ref(database, 'ecoBreath/waterLevel');
 
     onValue(moistureRef, (snapshot) => {
       const data = snapshot.val();
@@ -35,6 +42,26 @@ function Dashboard() {
       const state = snapshot.val();
       if (state) setLightState(state);
     });
+
+    onValue(tempRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data !== null) setTemperatureRaw(data);
+    });
+
+    onValue(lightIntensityRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data !== null) setLightSensorRaw(data);
+    });
+
+    onValue(humidityRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data !== null) setHumidityRaw(data);
+    });
+
+    onValue(waterRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data !== null) setWaterLevel(data);
+    });
   }, []);
 
   const toggleDevice = (device, state) => {
@@ -44,63 +71,72 @@ function Dashboard() {
       .catch((error) => console.error(`Error setting ${device}:`, error));
   };
 
-  // Toggle auto/manual for fan
- const handleFanModeChange = () => {
-  const newMode = fanMode === 'MANUAL' ? 'AUTO' : 'MANUAL';
-  setFanMode(newMode);
+  const handleFanModeChange = () => {
+    const newMode = fanMode === 'MANUAL' ? 'AUTO' : 'MANUAL';
+    setFanMode(newMode);
+    set(ref(database, 'ecoBreath/fanMode'), newMode)
+      .then(() => console.log('fanMode updated to', newMode))
+      .catch((err) => console.error('Error updating fanMode:', err));
 
-  // ✅ Add this to update in Firebase
-  set(ref(database, 'ecoBreath/fanMode'), newMode)
-    .then(() => console.log('fanMode updated to', newMode))
-    .catch((err) => console.error('Error updating fanMode:', err));
+    if (newMode === 'AUTO') {
+      const intervalId = setInterval(() => {
+        setFanState((prev) => {
+          const newState = prev === 'ON' ? 'OFF' : 'ON';
+          toggleDevice('fan', newState);
+          return newState;
+        });
+      }, 10000);
+      setFanIntervalId(intervalId);
+    } else {
+      clearInterval(fanIntervalId);
+      setFanIntervalId(null);
+    }
+  };
 
-  if (newMode === 'AUTO') {
-    const intervalId = setInterval(() => {
-      setFanState(prev => {
-        const newState = prev === 'ON' ? 'OFF' : 'ON';
-        toggleDevice('fan', newState);
-        return newState;
-      });
-    }, 10000);
-    setFanIntervalId(intervalId);
-  } else {
-    clearInterval(fanIntervalId);
-    setFanIntervalId(null);
-  }
-};
+  const handleLightModeChange = () => {
+    const newMode = lightMode === 'MANUAL' ? 'AUTO' : 'MANUAL';
+    setLightMode(newMode);
+    set(ref(database, 'ecoBreath/lightMode'), newMode)
+      .then(() => console.log('lightMode updated to', newMode))
+      .catch((err) => console.error('Error updating lightMode:', err));
 
-
-const handleLightModeChange = () => {
-  const newMode = lightMode === 'MANUAL' ? 'AUTO' : 'MANUAL';
-  setLightMode(newMode);
-
-  // ✅ Add this to update in Firebase
-  set(ref(database, 'ecoBreath/lightMode'), newMode)
-    .then(() => console.log('lightMode updated to', newMode))
-    .catch((err) => console.error('Error updating lightMode:', err));
-
-  if (newMode === 'AUTO') {
-    const intervalId = setInterval(() => {
-      setLightState(prev => {
-        const newState = prev === 'ON' ? 'OFF' : 'ON';
-        toggleDevice('light', newState);
-        return newState;
-      });
-    }, 10000);
-    setLightIntervalId(intervalId);
-  } else {
-    clearInterval(lightIntervalId);
-    setLightIntervalId(null);
-  }
-};
+    if (newMode === 'AUTO') {
+      const intervalId = setInterval(() => {
+        setLightState((prev) => {
+          const newState = prev === 'ON' ? 'OFF' : 'ON';
+          toggleDevice('light', newState);
+          return newState;
+        });
+      }, 10000);
+      setLightIntervalId(intervalId);
+    } else {
+      clearInterval(lightIntervalId);
+      setLightIntervalId(null);
+    }
+  };
 
   return (
     <div className="dashboard">
       <h1>EcoBreath Dashboard 🌱</h1>
 
-      <div className="moisture-card">
-        <h2>Soil Moisture</h2>
-        <p className="moisture-value">{moisture}</p>
+      <div className="card-grid">
+        <div className="info-card">
+          <h2>Soil Moisture</h2>
+          <p className="value-display">{moisture} %</p>
+        </div>
+        <div className="info-card">
+          <h2>Light Intensity</h2>
+          <p className="value-display">{lightSensorRaw} lux</p>
+        </div>
+        <div className="info-card">
+          <h2>Water Level</h2>
+          <p className="value-display">{waterLevel} %</p>
+        </div>
+        <div className="info-card">
+          <h2>Temperature</h2>
+          <p className="value-display">{temperatureRaw}°C</p>
+          <small className="sub-value">Humidity: {humidityRaw} %</small>
+        </div>
       </div>
 
       <div className="controls">
@@ -137,3 +173,4 @@ const handleLightModeChange = () => {
 }
 
 export default Dashboard;
+
