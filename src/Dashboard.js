@@ -122,7 +122,7 @@ function Dashboard() {
       <div className="card-grid">
         <div className="info-card">
           <h2>Soil Moisture</h2>
-          <p className="value-display">{moisture} %</p>
+          <p className="value-display">{moisture}V/V</p>
         </div>
         <div className="info-card">
           <h2>Light Intensity</h2>
