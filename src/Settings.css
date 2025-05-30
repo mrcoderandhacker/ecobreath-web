@@ -1,0 +1,66 @@
+/* src/Settings.css */
+
+.settings {
+  position: relative;
+  padding: 2rem 2.5rem;
+  border-radius: 15px;
+  background: url('./123.jpg') no-repeat center center;
+  background-size: cover;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  width: 792.35px;
+}
+
+.settings::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 128, 0, 0.5); /* green overlay */
+  border-radius: 15px;
+  z-index: 0;
+}
+
+.settings * {
+  position: relative;
+  z-index: 1;
+}
+
+.settings:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.6);
+}
+
+.settings h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+.settings p {
+  font-size: 1.1rem;
+  line-height: 1.4;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Responsive design for mobile/tablets */
+@media screen and (max-width: 768px) {
+  .settings {
+    padding: 1.5rem;
+    max-width: 95%;
+  }
+
+  .settings h2 {
+    font-size: 1.5rem;
+  }
+
+  .settings p {
+    font-size: 1rem;
+  }
+}

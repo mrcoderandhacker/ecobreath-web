@@ -1,0 +1,116 @@
+.analytics {
+  position: relative;
+  padding: 2rem 2.5rem;        /* Increased padding */
+  border-radius: 20px;
+  background: url('./123.jpg') no-repeat center center;
+  background-size: cover;
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+  overflow-x: auto;           /* Allow horizontal scroll if needed */
+  overflow-y: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 95%;                 /* Increased width */
+  max-width: 1100px;          /* Increased max-width */
+  margin: 1.5rem auto;        
+  box-sizing: border-box;
+  
+    padding-top: 2px;
+margin-top: 0;
+
+  scrollbar-width: thin;      /* For Firefox - thin scrollbar */
+}
+
+/* Scrollbar styling */
+.analytics::-webkit-scrollbar {
+  height: 8px;
+}
+.analytics::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+/* Content layout for cards */
+.analytics-content {
+  display: flex;
+  flex-wrap: wrap;          
+  gap: 1.5rem;
+  justify-content: center;  
+  margin-top: 0.2rem; /* Further reduced from 0.5rem */
+}
+
+/* Individual analytics card */
+/* Individual analytics card */
+.chart-card {
+  flex: 1 1 calc(23% - 1.2rem); /* Slightly smaller: ~4 per row still */
+  min-width: 100px;             /* reduced from 220px */
+  max-width: 260px;             /* added max width to prevent stretch */
+  background: rgba(121, 98, 95, 0.6);
+  backdrop-filter: blur(8px);
+  padding: 0.8rem;              /* reduced padding */
+  border-radius: 15px;
+  box-shadow: 0 4px 25px rgba(193, 191, 210, 0.8);
+  border: 2px solid rgba(175, 170, 179, 0.9);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #fff;
+}
+
+.chart-card:hover {
+  background: rgba(139, 133, 146, 0.8);
+  box-shadow: 0 8px 35px rgb(150, 137, 163);
+  border-color: rgb(145, 130, 160);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1024px) {
+  .analytics {
+    padding: 1.5rem 2rem;        /* Slightly larger padding on medium screens */
+    max-width: 95%;
+    width: 95%;
+  }
+
+  .analytics h2 {
+    font-size: 1.8rem;
+  }
+
+  .analytics p {
+    font-size: 1.05rem;
+  }
+
+  .analytics-content {
+    gap: 0.8rem;
+  }
+
+  .chart-card {
+    flex: 0 0 240px;        
+    min-width: 240px;
+    max-width: 240px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .analytics {
+    padding: 1.2rem 1.2rem;      /* A bit more padding on small screens */
+  }
+
+  .analytics h2 {
+    font-size: 1.5rem;
+  }
+
+  .analytics p {
+    font-size: 1rem;
+  }
+
+  .analytics-content {
+    gap: 0.6rem;
+  }
+
+  .chart-card {
+    flex: 0 0 200px;        
+    min-width: 200px;
+    max-width: 200px;
+  }
+
+  .chart-placeholder {
+    height: 130px;
+  }
+}

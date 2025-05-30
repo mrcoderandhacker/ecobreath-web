@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { database } from './firebase';
 import { ref, set, onValue } from 'firebase/database';
-import './App.css';
+import './dashboard.css';
 
 function Dashboard() {
-  const [moisture, setMoisture] = useState('Loading...');
+  const [moistureRaw, setMoistureRaw] = useState('Loading...');
   const [fanState, setFanState] = useState('OFF');
   const [lightState, setLightState] = useState('OFF');
   const [fanMode, setFanMode] = useState('MANUAL');
@@ -20,7 +20,7 @@ function Dashboard() {
   const [lightIntervalId, setLightIntervalId] = useState(null);
 
   useEffect(() => {
-    const moistureRef = ref(database, 'ecoBreath/moisture');
+    const moistureRef = ref(database, 'ecoBreath/moistureRaw');
     const fanRef = ref(database, 'ecoBreath/fan');
     const lightRef = ref(database, 'ecoBreath/light');
     const tempRef = ref(database, 'ecoBreath/temperatureRaw');
@@ -30,7 +30,7 @@ function Dashboard() {
 
     onValue(moistureRef, (snapshot) => {
       const data = snapshot.val();
-      if (data !== null) setMoisture(data);
+      if (data !== null) setMoistureRaw(data);
     });
 
     onValue(fanRef, (snapshot) => {
@@ -122,7 +122,7 @@ function Dashboard() {
       <div className="card-grid">
         <div className="info-card">
           <h2>Soil Moisture</h2>
-          <p className="value-display">{moisture}V/V</p>
+          <p className="value-display">{moistureRaw}V/V</p>
         </div>
         <div className="info-card">
           <h2>Light Intensity</h2>
@@ -173,4 +173,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-

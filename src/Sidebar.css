@@ -1,0 +1,101 @@
+/* Desktop Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #e8f5e9;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #c8e6c9;
+  box-sizing: border-box;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo Styling */
+.logo {
+  font-size: 1.8rem;
+  color: #2e7d32;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Sidebar List */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Sidebar Items */
+.sidebar li {
+  margin: 10px 0;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Active and Hover State */
+.sidebar li.active,
+.sidebar li:hover {
+  background-color: #c8e6c9;
+  font-weight: bold;
+}
+
+/* Icon Styling */
+.sidebar li .icon {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+/* Mobile View: Bottom Navigation */
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0.4rem 0.6rem;
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    border-right: none;
+    border-top: 1px solid #c8e6c9;
+    z-index: 1000;
+  }
+
+  .logo {
+    display: none; /* Hide logo on mobile */
+  }
+
+  .sidebar ul {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar li {
+    margin: 0.2rem;
+    padding: 0.4rem;
+    font-size: 0.9rem;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .sidebar li .icon {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+}

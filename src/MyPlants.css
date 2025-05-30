@@ -1,0 +1,132 @@
+/* src/styles/MyPlants.css */
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-image: url('123.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  backdrop-filter: blur(5px);
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.content-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: calc(100vh - 60px);
+  box-sizing: border-box;
+}
+
+.Myplants {
+  position: relative;
+  padding: 2rem 2.5rem;
+  border-radius: 15px;
+  background: url('./123.jpg') no-repeat center center;
+  background-size: cover;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 100%;
+  width: 792.35px;
+  box-sizing: border-box;
+}
+
+.Myplants::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 100, 0, 0.5); /* green overlay */
+  border-radius: 15px;
+  z-index: 0;
+}
+
+.Myplants * {
+  position: relative;
+  z-index: 1;
+}
+
+.Myplants:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.6);
+}
+
+.Myplants h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+.Myplants p {
+  font-size: 1.1rem;
+  line-height: 1.4;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Responsive tweaks for mobile/tablet */
+@media screen and (max-width: 768px) {
+  .Myplants {
+    padding: 1.5rem;
+  }
+
+  .Myplants h2 {
+    font-size: 1.4rem;
+  }
+
+  .Myplants p {
+    font-size: 1rem;
+  }
+
+  .content-container {
+    padding: 10px;
+  }
+}
+/* Add these to your existing MyPlants.css */
+
+.my-plants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 2rem;
+}
+
+.my-plant-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.my-plant-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.my-plant-info h3 {
+  margin: 0 0 5px 0;
+  font-size: 1rem;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.my-plant-info p {
+  font-size: 0.8rem;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Update the existing media query */
+@media screen and (max-width: 768px) {
+  .my-plants-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
